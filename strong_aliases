@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.1.1
+# ~/.strong_aliases 1.1.2
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
@@ -22,6 +22,7 @@ _cli_help(){
  CLI_WARN="";
  [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"; 
  echo -e " $(_cli_logo) 
+
  ~/.strong_aliases function for aliases management.  Version: $CLI_VER
 $CLI_WARN
 Usage: 
