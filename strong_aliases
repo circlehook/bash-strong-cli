@@ -6,7 +6,7 @@ alias rgb='ccze -A';
 alias tailf='tail -f';
 
 _cli_logo(){
- echo -e '\e[32m'
+ echo -e '\e[95m'
  echo -e '   _____   _______   _____     ____    _   _    _____             _____   _        _____   '
  echo -e '  / ____| |__   __| |  __ \   / __ \  | \ | |  / ____|           / ____| | |      |_   _|  '
  echo -e ' | (___      | |    | |__) | | |  | | |  \| | | |  __   ______  | |      | |        | |    '
@@ -28,7 +28,7 @@ Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
-  $1 fresh       : clear  ~/.bash_history from words: cli sql ngx net dsk dcr ctl log note tmux
+  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl tmux
   $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
   $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
 
