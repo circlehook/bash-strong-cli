@@ -69,4 +69,64 @@ cli(){
   else
     _cli_help $FUNCNAME;
   fi
-}
+};
+_ctl_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
+_ctl_help(){
+  echo -e " 
+~/.strong_aliases function. System tools management
+
+Usage: 
+  $1 list-fail                   :   (systemctl)   list fail services
+  $1 list                        :   (systemctl)   list services + installed unit files
+  $1 %               [string]    :   (systemctl)  (list services + installed unit files) | grep [string]
+  $1 tree                        :   (systemctl)  tree services  
+  
+  $1 [=|+|-|@]       [service]   :   (systemctl)  status/start/stop/restart [service]  
+  $1 [boot|on|off]   [service]   :   (systemctl)  check/enable/disable/ start on boot  
+  $1 unit            [service]   :   (systemctl edit --full [service]) (needs daemon-reload)
+  $1 reload                      :   (systemctl daemon-reload)
+
+  $1 name            <hostname>  :   (hostnamectl set-hostname <hostname>) OR (hostnamectl | grep hostname) 
+  $1 time            <time>      :   (timedatectl set-time     <time>    ) OR (timedatectl | grep Local)
+  $1 zone            <timezone>  :   (timedatectl set-timezone <timezone>) OR (timedatectl | grep zone)
+  $1 zones           <string>    :   (timedatectl list-timezones) OR (timedatectl list-timezones | grep -i <string>) 
+ 
+Examples:
+  $1 % fire     OR  $1 list | grep fire   
+  $1 = nginx    OR  $1 status nginx  (original systemctl option STATUS)
+  $1 unit nginx AND $1 reload
+
+  $1 name       OR  $1 name example.com
+  $1 zones      OR  $1 zones euro
+  $1 zone       OR  $1 zone Europe/Kyiv
+  $1 time       OR  $1 time '2024-11-01 12:34:00'
+
+";
+};
+ctl(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "help")        _ctl_help $FUNCNAME;; 
+      "tree")        systemctl list-dependencies;; 
+      "reload")      systemctl daemon-reload;; 
+      "list-fail")   systemctl -at service | grep -E 'fail|not-found';; 
+      "list")        systemctl -at service --no-pager; systemctl list-unit-files --no-pager;;
+      "%")           [ -n "$2" ] && systemctl -at service | grep $2; systemctl list-unit-files | grep $2;; 
+      "unit")        [ -n "$2" ] && systemctl edit --full $2;; 
+      "boot")        [ -n "$2" ] && systemctl is-enabled $2;; 
+      "on")          [ -n "$2" ] && systemctl enable $2;; 
+      "off")         [ -n "$2" ] && systemctl disable $2;; 
+      "=")           [ -n "$2" ] && systemctl status $2;; 
+      "+")           [ -n "$2" ] && systemctl start $2;   echo -e "\nService started.  \n"; systemctl status $2;; 
+      "-")           [ -n "$2" ] && systemctl stop $2;    echo -e "\nService stoped.   \n"; systemctl status $2;; 
+      "@")           [ -n "$2" ] && systemctl restart $2; echo -e "\nService restarted.\n"; systemctl status $2;; 
+      "name")        [ -n "$2" ] && hostnamectl set-hostname $2 || hostnamectl | grep hostname;; 
+      "zone")        [ -n "$2" ] && timedatectl set-timezone $2 || timedatectl | grep zone;; 
+      "time")        [ -n "$2" ] && timedatectl set-time $2 || timedatectl | grep Local;; 
+      "zones")       [ -n "$2" ] && timedatectl list-timezones | grep -i $2 || timedatectl list-timezones;; 
+      *) _ctl_title $FUNCNAME && systemctl "$@";; 
+    esac 
+  else
+    _ctl_help $FUNCNAME;
+  fi
+};
