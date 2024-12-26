@@ -1,1 +1,78 @@
 # ~/.strong_aliases 1.0
+
+alias rgb='ccze -A';
+alias tailf='tail -f';
+
+_cli_logo(){
+ echo -e '\e[92m\e[95m'
+ echo -e '																							 '
+ echo -e '   _____   _______   _____     ____    _   _    _____             _____   _        _____   '
+ echo -e '  / ____| |__   __| |  __ \   / __ \  | \ | |  / ____|           / ____| | |      |_   _|  '
+ echo -e ' | (___      | |    | |__) | | |  | | |  \| | | |  __   ______  | |      | |        | |    '
+ echo -e '  \___ \     | |    |  _  /  | |  | | | . ` | | | |_ | |______| | |      | |        | |    '
+ echo -e '  ____) |    | |    | | \ \  | |__| | | |\  | | |__| |          | |____  | |____   _| |_   '
+ echo -e ' |_____/     |_|    |_|  \_\  \____/  |_| \_|  \_____|           \_____| |______| |_____|  '
+ echo -e '																							 '   
+ echo -e '\e[0m'
+};
+_cli_help(){ 
+ clear
+ CLI_VER_NEW=$(wget -O - $CLI_URL 2>/dev/null | head -n 1 | awk '{print $3}');
+ CLI_VER=$(cat ~/.strong_aliases 2>/dev/null | head -n 1 | awk '{print $3}');
+ CLI_WARN="";
+ [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"; 
+ echo -e " $(_cli_logo)
+~/.strong_aliases function for aliases management.  Version: $CLI_VER
+$CLI_WARN
+Usage: 
+  $1 update      : update ~/.strong_aliases && source ~/.bashrc
+  $1 edit        : edit   ~/.strong_aliases
+  $1 reload      : source ~/.bashrc 
+  $1 fresh       : clear  ~/.bash_history from words: cli sql ngx net dsk dcr ctl log note tmux
+  $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
+  $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
+
+Functions list:
+  ctl             :  System  Toolkit 
+  dcr             :  Docker  Toolkit  
+  dsk             :  Disk    Toolkit 
+  log             :  Logs    Toolkit 
+  ngx             :  Wrapper function for Nginx
+  net             :  Network Toolkit
+  note            :  Get notes (*.txt) 
+  sql             :  Mysql   Toolkit
+ 
+
+Aliases:
+  [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
+
+";
+};
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ngx\|net\|dsk\|ctl\|dcr\|log\|note\|tmux/d' ~/.bash_history; };
+_cli_board(){
+  echo '
+    bind-key v split-window -h
+    bind-key h split-window -v
+    select-layout even-vertical
+    select-layout even-horizontal
+    split-window -v
+    split-window -h
+  ' > /root/.tmux-panels.conf 
+  tmux ls | grep -q "board" && { tmux attach -t board || true; } || { tmux new -d -s board && tmux source /root/.tmux-panels.conf && tmux attach -t board; }
+ };
+cli(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "help")   _cli_help $FUNCNAME;; 
+      "edit")   command -v nano &> /dev/null && nano "~/.strong_aliases" || vi "~/.strong_aliases";;
+      "update") wget -O - $CLI_URL > ~/.strong_aliases; source ~/.bashrc; cli;;
+      "reload") source ~/.bashrc;;
+      "fresh")  _cli_fresh;;
+      "board")  _cli_board;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli sql ngx net dsk dcr ctl log note;;
+      *) _cli_help $FUNCNAME;; 
+    esac 
+  else
+    _cli_help $FUNCNAME;
+  fi
+}
