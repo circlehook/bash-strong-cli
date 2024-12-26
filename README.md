@@ -1,16 +1,31 @@
 ## Install
 
-### One command installation
+### One command launch
 ```
-   curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/cli.sh | bash && source ~/.bashrc && cli
+curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/cli.sh | bash && source ~/.bashrc && cli
 ``` 
 ### Manual install 
 ```
-   wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
-   grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
-   source ~/.bashrc
+wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
+grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
+source ~/.bashrc
 ```
 ### Usage
 ```
-   cli
+cli
+```
+
+## Pretty install on your domain
+
+### Create a file cli.sh in the root of the site
+```
+#!/bin/bash
+
+wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
+grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
+```
+
+### One command launch
+```
+curl http://example.com/cli.sh | bash && source ~/.bashrc && cli
 ```
