@@ -27,5 +27,5 @@ grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.str
 
 ### One command launch
 ```
-curl http://example.com/cli.sh | bash && source ~/.bashrc && cli
+curl example.com/cli.sh | bash && source ~/.bashrc && cli
 ```
