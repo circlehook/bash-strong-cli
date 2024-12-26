@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.1
+# ~/.strong_aliases 1.1.1
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
@@ -73,6 +73,7 @@ cli(){
 _ctl_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
 _ctl_help(){
   echo -e " 
+
 ~/.strong_aliases function. System tools management
 
 Usage: 
