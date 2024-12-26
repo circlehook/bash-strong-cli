@@ -7,14 +7,12 @@ alias tailf='tail -f';
 
 _cli_logo(){
  echo -e '\e[92m\e[95m'
- echo -e '																							 '
  echo -e '   _____   _______   _____     ____    _   _    _____             _____   _        _____   '
  echo -e '  / ____| |__   __| |  __ \   / __ \  | \ | |  / ____|           / ____| | |      |_   _|  '
  echo -e ' | (___      | |    | |__) | | |  | | |  \| | | |  __   ______  | |      | |        | |    '
  echo -e '  \___ \     | |    |  _  /  | |  | | | . ` | | | |_ | |______| | |      | |        | |    '
  echo -e '  ____) |    | |    | | \ \  | |__| | | |\  | | |__| |          | |____  | |____   _| |_   '
  echo -e ' |_____/     |_|    |_|  \_\  \____/  |_| \_|  \_____|           \_____| |______| |_____|  '
- echo -e '																							 '   
  echo -e '\e[0m'
 };
 _cli_help(){ 
@@ -36,12 +34,6 @@ Usage:
 
 Functions list:
   ctl             :  System  Toolkit 
-  dcr             :  Docker  Toolkit  
-  dsk             :  Disk    Toolkit 
-  log             :  Logs    Toolkit 
-  ngx             :  Wrapper function for Nginx
-  net             :  Network Toolkit
-  note            :  Get notes (*.txt) 
   sql             :  Mysql   Toolkit
  
 
