@@ -1,5 +1,7 @@
 # ~/.strong_aliases 1.0
 
+CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
+
 alias rgb='ccze -A';
 alias tailf='tail -f';
 
