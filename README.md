@@ -38,3 +38,15 @@ grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.str
 ```
 curl https://example.com/cli.sh | bash && source ~/.bashrc && cli
 ```
+
+# Uninstall
+To uninstall aliases, run:
+```
+cli drop
+```
+#### Manual uninstall
+Remove row from .bashrc and delete file .string_aliases 
+```
+nano /root/.bashrc
+rm /root/.string_aliases
+```
