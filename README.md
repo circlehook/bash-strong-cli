@@ -45,8 +45,8 @@ To uninstall aliases, run:
 cli drop
 ```
 #### Manual uninstall
-Remove row from .bashrc and delete file .string_aliases 
+Remove row from .bashrc and delete file .strong_aliases 
 ```
 nano /root/.bashrc
-rm /root/.string_aliases
+rm /root/.strong_aliases
 ```
