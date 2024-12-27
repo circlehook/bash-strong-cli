@@ -51,7 +51,7 @@ Usage:
 Functions list:
   ctl             :  System  Toolkit 
   sql             :  Mysql   Toolkit
- 
+  log             :  Logs    Toolkit 
 
 Aliases:
   [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
