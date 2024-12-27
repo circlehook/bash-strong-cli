@@ -15,7 +15,7 @@ source ~/.bashrc
 cli
 ```
 
-## Pretty install on your domain
+## Pretty launch on your domain
 
 ### Create a file cli.sh in the root of the site
 ```
@@ -27,5 +27,5 @@ grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.str
 
 ### One command launch
 ```
-curl example.com/cli.sh | bash && source ~/.bashrc && cli
+wget example.com/cli.sh | bash && source ~/.bashrc && cli
 ```
