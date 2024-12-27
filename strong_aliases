@@ -44,7 +44,7 @@ Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
-  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl
+  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl log
   $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
   $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
 
@@ -58,7 +58,7 @@ Aliases:
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -79,7 +79,7 @@ cli(){
       "reload") source ~/.bashrc;;
       "fresh")  _cli_fresh;;
       "board")  _cli_board;;
-      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli sql ctl;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli sql ctl log;;
       *) _cli_help $FUNCNAME;; 
     esac 
   else
