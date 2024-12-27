@@ -11,7 +11,7 @@ Main function **cli** show a list of available functions. Each function displays
 
 #### One command launch
 ```
-curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/cli.sh | bash && source ~/.bashrc && cli
+curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/install.sh | bash && source ~/.bashrc && cli
 ``` 
 #### Manual install 
 ```
