@@ -142,7 +142,7 @@ _sql_tables(){ mysql -e "SELECT table_name, COUNT(*) AS row_count FROM informati
 _sql_makezabbix(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'zabbix'@'localhost'; DROP USER IF EXISTS 'zabbix'@'127.0.0.1'; CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$PASSWORD';CREATE USER 'zabbix'@'127.0.0.1' IDENTIFIED BY '$PASSWORD'; GRANT ALL ON *.* TO 'zabbix'@'localhost';GRANT ALL ON *.* TO 'zabbix'@'127.0.0.1';flush privileges;"; mkdir -p /etc/zabbix; echo -e "[client]\nuser=zabbix\npassword=$PASSWORD" > /etc/zabbix/.my.cnf;cat /etc/zabbix/.my.cnf; };
 _sql_makebareos(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'bareos'@'localhost'; CREATE USER 'bareos'@'localhost' IDENTIFIED BY '$PASSWORD'; GRANT USAGE ON *.* TO 'bareos'@'localhost'; GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, PROCESS, EXECUTE, TRIGGER ON *.* TO 'bareos'@'localhost'; FLUSH PRIVILEGES;"; echo -e "[client]\nusername=bareos\npassword=$PASSWORD" > /root/.bareos.cnf;cat /root/.bareos.cnf; };
 _sql_help(){ echo "
-~/.robot_aliases function. Mysql Toolkit (mysql, mysqldump).
+~/.strong_aliases function. Mysql Toolkit (mysql, mysqldump).
 
 Usage:
  $1 memory                  : show RAM Mysql usage
