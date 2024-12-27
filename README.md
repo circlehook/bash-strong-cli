@@ -1,7 +1,13 @@
 # About 
 The file **strong_aliases** contains functions and aliases, that are placed in the .bashrc to quickly perform daily tasks in the console.
 
-## Install
+# Manual
+Main function **cli** show a list of available functions. Each function displays help when launched.
+- ctl    :  System  Toolkit
+- sql    :  Mysql   Toolkit
+- log    :  Logs    Toolkit
+
+# Install
 
 #### One command launch
 ```
@@ -18,7 +24,7 @@ source ~/.bashrc
 cli
 ```
 
-## Pretty launch on your domain
+# Pretty launch on your domain
 
 #### Create a file cli.sh in the root of the site
 ```
