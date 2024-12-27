@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.2.3
+# ~/.strong_aliases 1.2.4
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -10,7 +10,7 @@
 #
 # V1.0      26 Dec 2024     Initial release
 # V1.1      26 Dec 2024     cli function
-# V1.2      27 Dec 2024     ctl function, sql function
+# V1.2      27 Dec 2024     create ctl, sql, log functions
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
@@ -144,6 +144,44 @@ ctl(){
     esac 
   else
     _ctl_help $FUNCNAME;
+  fi
+};
+
+_log_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
+_log_help(){
+  echo -e " 
+~/.strong_aliases function. Logs Toolkit
+
+Usage: 
+  $1 size                            : (journalctl)(du) journalctl disk usage + /var/log size
+  $1 clear  [mb]                     : (journalctl) clearing journal up to [mb]  
+  $1 view   [hours]                  : (journalctl) last [hours] journal   
+  $1 errors [hours]                  : (journalctl) last [hours] journal errors   
+  $1 period [min-hours] [max-hours]  : (journalctl) journal entries between hours
+  $1 boots                           : (journalctl) show list boots
+  $1 sessions                        : (last) show listing of last logged in users in 30 days
+
+Examples:
+  $1 period 10 11
+  $1 --since \"2024-01-14 00:11:00\" --until \"2024-01-14 00:13:00\"
+
+";
+};
+log(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "help")   _log_help $FUNCNAME;; 
+      "size")   journalctl --disk-usage; du -h --max-depth=1 /var/log | awk '$1 != "0"' | sort -h;; 
+      "clear")  [ -n "$2" ] && journalctl --vacuum-size=$2M || journalctl --vacuum-size=0M;; 
+      "view")   [ -n "$2" ] && journalctl --since "$2 hours ago";; 
+      "errors")  [ -n "$2" ] && journalctl -p err -b --since "$2 hour ago";; 
+      "period") journalctl --since "$3 hour ago" --until "$2 hour ago";; 
+      "boots")  journalctl --list-boots;; 
+      "sessions") last | grep $(date -d "last month" +"%b");; 
+      *) _log_title $FUNCNAME && journalctl "$@";; 
+    esac 
+  else
+    _log_help $FUNCNAME;
   fi
 };
 
