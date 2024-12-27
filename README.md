@@ -9,6 +9,11 @@ Main function **cli** show a list of available functions. Each function displays
 
 # Install
 
+#### Software requirements (optional)
+```
+apt install -y ccze tmux
+```
+
 #### One command launch
 ```
 curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/install.sh | bash && source ~/.bashrc && cli
