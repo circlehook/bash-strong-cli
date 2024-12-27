@@ -1,6 +1,9 @@
-# ~/.strong_aliases 1.1.3
+# ~/.strong_aliases 1.2
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
+
+# https://github.com/BMDan/tuning-primer.sh
+MYSQL_TUNING_URL="https://raw.githubusercontent.com/BMDan/tuning-primer.sh/main/tuning-primer.sh"
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
@@ -129,5 +132,75 @@ ctl(){
     esac 
   else
     _ctl_help $FUNCNAME;
+  fi
+};
+
+_sql_title(){ echo -e "\n$(tput setaf 6)Usage: sql help$(tput sgr0)\n\n"; }; 
+_sql_memory(){ IDS=($(find "/proc/$(ps aux | grep $1 | grep -v grep | awk '{print $2}')/task" -maxdepth 1 -type d ! -name 'task' -exec basename {} \;)); MEMORY=0; for ID in "${IDS[@]}"; do MEMORY=$(expr $(ps -o rss= -p $ID) + $MEMORY); done; echo $((MEMORY / 1024)); }; 
+_sql_dbsize(){ mysql -e 'SELECT table_schema AS `Database`, ROUND(SUM(data_length + index_length) / 1024 / 1024) AS `Size (MB)` FROM information_schema.tables GROUP BY table_schema HAVING `Size (MB)` >= 0 UNION SELECT schema_name AS `Database`, 0 AS `Size (MB)` FROM information_schema.schemata WHERE schema_name NOT IN (SELECT table_schema FROM information_schema.tables) ORDER BY `Size (MB)` DESC;'; }; 
+_sql_tables(){ mysql -e "SELECT table_name, COUNT(*) AS row_count FROM information_schema.tables WHERE table_schema = '$1' GROUP BY table_name ORDER BY row_count ASC;"; }; 
+_sql_makezabbix(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'zabbix'@'localhost'; DROP USER IF EXISTS 'zabbix'@'127.0.0.1'; CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$PASSWORD';CREATE USER 'zabbix'@'127.0.0.1' IDENTIFIED BY '$PASSWORD'; GRANT ALL ON *.* TO 'zabbix'@'localhost';GRANT ALL ON *.* TO 'zabbix'@'127.0.0.1';flush privileges;"; mkdir -p /etc/zabbix; echo -e "[client]\nuser=zabbix\npassword=$PASSWORD" > /etc/zabbix/.my.cnf;cat /etc/zabbix/.my.cnf; };
+_sql_makebareos(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'bareos'@'localhost'; CREATE USER 'bareos'@'localhost' IDENTIFIED BY '$PASSWORD'; GRANT USAGE ON *.* TO 'bareos'@'localhost'; GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, PROCESS, EXECUTE, TRIGGER ON *.* TO 'bareos'@'localhost'; FLUSH PRIVILEGES;"; echo -e "[client]\nusername=bareos\npassword=$PASSWORD" > /root/.bareos.cnf;cat /root/.bareos.cnf; };
+_sql_help(){ echo "
+~/.robot_aliases function. Mysql Toolkit (mysql, mysqldump).
+
+Usage:
+ $1 memory                  : show RAM Mysql usage
+ $1 bases                   : show databases with size
+ $1 create [dbname]         : create database
+ $1 base   [dbname]         : show database owners
+ $1 tables [dbname]         : show database tables 
+ $1 drop   [dbname]         : drop database 
+ $1 dump   [dbname]         : dump database to this directory on \"[dbname].sql\"
+ $1 clone  [dbname] [newdb] : create database \"newdb\" + copy database \"dbname\" to \"newdb\" 
+  
+ $1 users                                        : show users
+ $1 makeowner  [user]<@host> [password] [dbname] : create user + grant all privileges on the db
+ $1 makereader [user]<@host> [password] [dbname] : create user + grant select         on the db
+ $1 user       [user]<@host>                     : show user grants 
+ $1 password   [user]<@host> [password]          : reset user password
+ $1 dropuser   [user]<@host>                     : drop user
+ 
+ $1 makezabbix  : create mysql zabbix user + write access to /etc/zabbix/.my.cnf
+ $1 makebareos  : create mysql bareos user + write access to /root/.bareos.cnf
+ $1 tuning      : running a script from the repository https://github.com/BMDan/tuning-primer.sh
+
+ "; };
+
+# $1 createuser  [user]@host [password]           : create user
+# $1 grantall    [user]@host [dbname]             : grant all privileges to the user on the db 
+
+sql(){
+  MESSAGE_CAPTCHA="WARNING!!! Enter \"DROP\" to drop database: ";
+  if [ $# -eq 0 ]; then
+      #_sql_title && mysql;
+      _sql_help $FUNCNAME;
+  else
+    case "$1" in
+     "notes")     _sql_notes;;
+     "memory")    echo -e "\nUsage RAM: $(_sql_memory "mysql") (mb)\n";;
+     "bases")     _sql_dbsize;;
+     "create")    [ -n "$2" ] && mysql -e "CREATE DATABASE $2;";;
+     "base")      [ -n "$2" ] && mysql -e "SELECT user, host, db FROM mysql.db WHERE db = '$2';";;
+     "tables")    _sql_tables "$2";;
+     "variables") _sql_variables;;
+     "drop")   [ -n "$2" ] && read -p "$MESSAGE_CAPTCHA" captcha && [ "$captcha" = "DROP" ] && mysql -e "DROP DATABASE $2;" && sql bases || echo "FALSE";;
+     "dump")     [ -n "$2" ] && mysqldump "$2" > "$2.sql";;
+     #"copy")     [ $# -ge 3 ] && mysql -e "DROP DATABASE IF EXISTS $3; CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
+     "clone")     [ $# -ge 3 ] && mysql -e "CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
+     "users")  mysql -e "SELECT USER,Host FROM mysql.user;";;
+     "makeowner")  [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT ALL PRIVILEGES ON $4 . * TO $2;FLUSH PRIVILEGES;";;
+     "makereader") [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT SELECT ON $4 . * TO $2;FLUSH PRIVILEGES;";;
+     #"createuser") [ $# -ge 3 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';";;
+     #"grantall") [ $# -ge 3 ] && mysql -e "GRANT ALL PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
+     "user")     [ -n "$2" ] && mysql -e "SHOW GRANTS FOR $2;";;
+     "password") [ -n "$2" ] && mysql -e "ALTER USER $2 IDENTIFIED BY '$3';";;
+     "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2;";;
+     "tuning")   curl -L $MYSQL_TUNING_URL | bash;;
+     "makezabbix") _sql_makezabbix;;
+     "makebareos") _sql_makebareos;;
+     "help")     _sql_help $FUNCNAME;;
+     *)          _sql_title && mysql "$@";;
+    esac
   fi
 };
