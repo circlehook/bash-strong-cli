@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.2
+# ~/.strong_aliases 1.2.1
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
@@ -172,35 +172,38 @@ Usage:
 
 sql(){
   MESSAGE_CAPTCHA="WARNING!!! Enter \"DROP\" to drop database: ";
-  if [ $# -eq 0 ]; then
-      #_sql_title && mysql;
-      _sql_help $FUNCNAME;
+  if ! mysql -e "SELECT 1;" &>/dev/null; then
+    echo "Password required, file /root/.my.cnf may not be found. Using the function in this form is not possible."
   else
-    case "$1" in
-     "notes")     _sql_notes;;
-     "memory")    echo -e "\nUsage RAM: $(_sql_memory "mysql") (mb)\n";;
-     "bases")     _sql_dbsize;;
-     "create")    [ -n "$2" ] && mysql -e "CREATE DATABASE $2;";;
-     "base")      [ -n "$2" ] && mysql -e "SELECT user, host, db FROM mysql.db WHERE db = '$2';";;
-     "tables")    _sql_tables "$2";;
-     "variables") _sql_variables;;
-     "drop")   [ -n "$2" ] && read -p "$MESSAGE_CAPTCHA" captcha && [ "$captcha" = "DROP" ] && mysql -e "DROP DATABASE $2;" && sql bases || echo "FALSE";;
-     "dump")     [ -n "$2" ] && mysqldump "$2" > "$2.sql";;
-     #"copy")     [ $# -ge 3 ] && mysql -e "DROP DATABASE IF EXISTS $3; CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
-     "clone")     [ $# -ge 3 ] && mysql -e "CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
-     "users")  mysql -e "SELECT USER,Host FROM mysql.user;";;
-     "makeowner")  [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT ALL PRIVILEGES ON $4 . * TO $2;FLUSH PRIVILEGES;";;
-     "makereader") [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT SELECT ON $4 . * TO $2;FLUSH PRIVILEGES;";;
-     #"createuser") [ $# -ge 3 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';";;
-     #"grantall") [ $# -ge 3 ] && mysql -e "GRANT ALL PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
-     "user")     [ -n "$2" ] && mysql -e "SHOW GRANTS FOR $2;";;
-     "password") [ -n "$2" ] && mysql -e "ALTER USER $2 IDENTIFIED BY '$3';";;
-     "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2;";;
-     "tuning")   curl -L $MYSQL_TUNING_URL | bash;;
-     "makezabbix") _sql_makezabbix;;
-     "makebareos") _sql_makebareos;;
-     "help")     _sql_help $FUNCNAME;;
-     *)          _sql_title && mysql "$@";;
-    esac
+    if [ $# -eq 0 ]; then
+        #_sql_title && mysql;
+        _sql_help $FUNCNAME;
+    else
+      case "$1" in
+      "memory")    echo -e "\nUsage RAM: $(_sql_memory "mysql") (mb)\n";;
+      "bases")     _sql_dbsize;;
+      "create")    [ -n "$2" ] && mysql -e "CREATE DATABASE $2;";;
+      "base")      [ -n "$2" ] && mysql -e "SELECT user, host, db FROM mysql.db WHERE db = '$2';";;
+      "tables")    _sql_tables "$2";;
+      "variables") _sql_variables;;
+      "drop")   [ -n "$2" ] && read -p "$MESSAGE_CAPTCHA" captcha && [ "$captcha" = "DROP" ] && mysql -e "DROP DATABASE $2;" && sql bases || echo "FALSE";;
+      "dump")     [ -n "$2" ] && mysqldump "$2" > "$2.sql";;
+      #"copy")     [ $# -ge 3 ] && mysql -e "DROP DATABASE IF EXISTS $3; CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
+      "clone")     [ $# -ge 3 ] && mysql -e "CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
+      "users")  mysql -e "SELECT USER,Host FROM mysql.user;";;
+      "makeowner")  [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT ALL PRIVILEGES ON $4 . * TO $2;FLUSH PRIVILEGES;";;
+      "makereader") [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT SELECT ON $4 . * TO $2;FLUSH PRIVILEGES;";;
+      #"createuser") [ $# -ge 3 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';";;
+      #"grantall") [ $# -ge 3 ] && mysql -e "GRANT ALL PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
+      "user")     [ -n "$2" ] && mysql -e "SHOW GRANTS FOR $2;";;
+      "password") [ -n "$2" ] && mysql -e "ALTER USER $2 IDENTIFIED BY '$3';";;
+      "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2;";;
+      "tuning")   curl -L $MYSQL_TUNING_URL | bash;;
+      "makezabbix") _sql_makezabbix;;
+      "makebareos") _sql_makebareos;;
+      "help")     _sql_help $FUNCNAME;;
+      *)          _sql_title && mysql "$@";;
+      esac
+    fi
   fi
 };
