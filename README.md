@@ -1,5 +1,5 @@
 # About 
-The file **strong_aliases** contains functions and aliases. That are include in the .bashrc, to quickly perform daily tasks in the console.
+The file **strong_aliases** contains bash functions and aliases. That are include in the .bashrc, to quickly perform daily tasks in the console.
 
 # Manual
 Main function **cli** show a list of available functions. Each function displays help when launched.
