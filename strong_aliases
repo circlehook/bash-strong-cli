@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3.3
+# ~/.strong_aliases 1.3.4
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -11,7 +11,7 @@
 # V1.0      26 Dec 2024     Initial release
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
-# V1.3      28 Dec 2024     ngx, net, dsk function
+# V1.3      28 Dec 2024     ngx, net, dsk, note function
 
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
@@ -23,6 +23,7 @@ RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/mast
 
 # My utils
 UTILS_BACKUP="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/files/backup.sh";
+MAN_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/manuals";
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
@@ -62,13 +63,14 @@ Functions list:
   ngx             :  Nginx   Toolkit
   dsk             :  Disk    Toolkit
   net             :  Network Toolkit
+  note            :  Network txt viewer
 
 Aliases:
   [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net\|dsk/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net\|dsk\|note/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -96,6 +98,40 @@ cli(){
     _cli_help $FUNCNAME;
   fi
 };
+
+_note_get(){ 
+  if [ -n "$1" ]; then
+    http_status=$(curl -s -o /dev/null -w "%{http_code}" "$MAN_URL/$1.md")
+    if [ $http_status -eq 200 ]; then
+      echo && echo -e "Manual are loading..." && echo; #sleep 1;
+      curl -sSL "$MAN_URL/$1.md" | cat;
+    else
+      echo -e "Заметка недоступна($http_status).\n"
+    fi
+  fi
+};
+_note_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
+_note_help(){
+  echo -e "
+~/.strong_aliases function. Network txt viewer  
+
+Usage: 
+  $1 [file-name]     :   (curl) display without save /bash-strong-cli/tree/main/files/[file-name].md
+                       :    - / -  Available file list: 
+                       :    - / -  main
+
+";};
+note(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "help") _note_help $FUNCNAME;; 
+      *)      _note_get "$1";;
+    esac 
+  else
+    _note_help $FUNCNAME;
+  fi
+};
+
 _ctl_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
 _ctl_help(){
   echo -e " 
