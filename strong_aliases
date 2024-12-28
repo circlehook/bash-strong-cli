@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.2.4
+# ~/.strong_aliases 1.3
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -11,6 +11,8 @@
 # V1.0      26 Dec 2024     Initial release
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
+# V1.3      28 Dec 2024     ngx function
+
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
@@ -52,13 +54,14 @@ Functions list:
   ctl             :  System  Toolkit 
   sql             :  Mysql   Toolkit
   log             :  Logs    Toolkit 
+  ngx             :  Nginx   Toolkit
 
 Aliases:
   [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -77,9 +80,9 @@ cli(){
       "edit")   command -v nano &> /dev/null && nano "~/.strong_aliases" || vi "~/.strong_aliases";;
       "update") wget -O - $CLI_URL > ~/.strong_aliases; source ~/.bashrc; cli;;
       "reload") source ~/.bashrc;;
-      "fresh")  _cli_fresh;;
+      "fresh")  _cli_fresh; unset PASSWORD;;
       "board")  _cli_board;;
-      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli sql ctl log;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases;;
       *) _cli_help $FUNCNAME;; 
     esac 
   else
@@ -182,6 +185,52 @@ log(){
     esac 
   else
     _log_help $FUNCNAME;
+  fi
+};
+
+_ngx_title(){ echo -e "\n$(tput setaf 6)Usage: ngx help$(tput sgr0)\n"; };
+_ngx_help() { echo -e "
+~/.strong_aliases Nginx wrapper function.
+
+ Usage:
+  $1 [sites|logs|ssl]       : (grep)      grep keywords in /etc/nginx
+  $1 build                  : (nginx)     configure options list
+  $1 reload                 : (nginx)     test configuration && reload   
+  $1 make dhparam           : (openssl)   make to this directory dhparam.pem 
+  $1 make certkey           : (openssl)   make to this directory cert.pem (self-signed 10years cert + key)
+
+ Examples:
+  $1 -V  OR   $1 build | grep ip 
+  $1 -t  AND  $1 -s reload 
+"; }; 
+_ngx_build() { nginx -V 2>&1 | grep 'configure' | sed 's/--/\n--/g'; }; 
+_ngx_select() { echo "awk '{print \"\033[1;36m\"\$1\"\033[0m\", \"\033[1;31m\"\$$1\"\033[0m\"}'"; }; 
+_ngx_grep() { echo; grep --include=*.conf -iRnE $1 /etc/nginx | grep -E 'enabled|-sites' | grep -vE 'pool_manager|server_status|rtc-server' | eval $(_ngx_select $2); echo; }; 
+_ngx_make(){ 
+  if [ -n "$1" ]; then
+    case "$1" in
+      "dhparam") openssl dhparam -out dhparam.pem 2048  && echo -e "\n ssl_dhparam $(pwd)/dhparam.pem;\n";;
+      "certkey") openssl req -x509 -batch -nodes -days 3650 -newkey rsa:2048 -keyout cert.pem -out cert.pem && echo -e "\n ssl_certificate $(pwd)/cert.pem;\n ssl_certificate_key $(pwd)/cert.pem;\n";;
+      *) ;; 
+    esac
+  else
+    echo "Make a choice.. Usage: ngx help "
+  fi
+};
+ngx(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "sites")       _ngx_grep 'set\s+\$docroot|set\s+\$root_path' "4";;
+      "logs")        _ngx_grep "access_log|error_log" "3";;
+      "ssl")         _ngx_grep 'ssl_cert' "2";;
+      "build")       _ngx_build;;
+      "reload")      nginx -t && nginx -s reload;;
+      "make")        [ "$#" -ge 2 ] && _ngx_make $2;;
+      "help")        _ngx_help $FUNCNAME;;
+      *)             _ngx_title && nginx "$@";;
+    esac
+  else
+    _ngx_help $FUNCNAME;
   fi
 };
 
