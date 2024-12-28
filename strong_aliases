@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3.4
+# ~/.strong_aliases 1.3.5
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -104,7 +104,7 @@ _note_get(){
     http_status=$(curl -s -o /dev/null -w "%{http_code}" "$MAN_URL/$1.md")
     if [ $http_status -eq 200 ]; then
       echo && echo -e "Manual are loading..." && echo; #sleep 1;
-      curl -sSL "$MAN_URL/$1.md" | cat;
+      curl -sSL "$MAN_URL/$1.md" | cat; echo -e "\n";
     else
       echo -e "Заметка недоступна($http_status).\n"
     fi
@@ -116,7 +116,7 @@ _note_help(){
 ~/.strong_aliases function. Network txt viewer  
 
 Usage: 
-  $1 [file-name]     :   (curl) display without save /bash-strong-cli/tree/main/files/[file-name].md
+  $1 [file-name]     :   (curl) display without save /bash-strong-cli/tree/main/manuals/[file-name].md
                        :    - / -  Available file list: 
                        :    - / -  main
 
