@@ -3,9 +3,13 @@ The file **strong_aliases** contains bash functions and aliases. That are includ
 
 # Manual
 Main function **cli** show a list of available functions. Each function displays help when launched.
-- ctl    :  System  Toolkit
-- sql    :  Mysql   Toolkit
-- log    :  Logs    Toolkit
+-  ctl             :  System  Toolkit 
+-  sql             :  Mysql   Toolkit
+-  log             :  Logs    Toolkit 
+-  ngx             :  Nginx   Toolkit
+-  dsk             :  Disk    Toolkit
+-  net             :  Network Toolkit
+-  note            :  Network txt viewer
 
 # Install
 
