@@ -1,6 +1,7 @@
 # ~/.strong_aliases 1.3.6
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
+# Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
 # Licence: LGPLv2
 # One command launch:
 #   curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/install.sh | bash && source ~/.bashrc && cli
@@ -30,12 +31,12 @@ alias tailf='tail -f';
 
 _cli_logo(){
  echo -e '\e[95m'
- echo -e '   _____   _______   _____     ____    _   _    _____             _____   _        _____   '
- echo -e '  / ____| |__   __| |  __ \   / __ \  | \ | |  / ____|           / ____| | |      |_   _|  '
- echo -e ' | (___      | |    | |__) | | |  | | |  \| | | |  __   ______  | |      | |        | |    '
- echo -e '  \___ \     | |    |  _  /  | |  | | | . ` | | | |_ | |______| | |      | |        | |    '
- echo -e '  ____) |    | |    | | \ \  | |__| | | |\  | | |__| |          | |____  | |____   _| |_   '
- echo -e ' |_____/     |_|    |_|  \_\  \____/  |_| \_|  \_____|           \_____| |______| |_____|  '
+ echo -e '  ____    _                                       ____   _       ___    '
+ echo -e ' / ___|  | |_   _ __    ___    _ __     __ _     / ___| | |     |_ _|   '
+ echo -e ' \___ \  | __| | '__|  / _ \  | '_ \   / _` |   | |     | |      | |    '
+ echo -e '  ___) | | |_  | |    | (_) | | | | | | (_| |   | |___  | |___   | |    '
+ echo -e ' |____/   \__| |_|     \___/  |_| |_|  \__, |    \____| |_____| |___|   '
+ echo -e '                                       |___/                            ' 
  echo -e '\e[0m\e[37m                          github.com/circlehook/bash-strong-cli \e[0m'
 };
 _cli_help(){ 
