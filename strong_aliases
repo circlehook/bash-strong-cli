@@ -104,7 +104,7 @@ _note_get(){
     http_status=$(curl -s -o /dev/null -w "%{http_code}" "$MAN_URL/$1.md")
     if [ $http_status -eq 200 ]; then
       echo && echo -e "Manual are loading..." && echo; #sleep 1;
-      curl -sSL "$MAN_URL/$1.md" | cat; echo -e "\n";
+      curl -sSL "$MAN_URL/$1.md" | grep -v '```' | cat; echo -e "\n";
     else
       echo -e "Заметка недоступна($http_status).\n"
     fi
