@@ -11,7 +11,7 @@ Main function **cli** show a list of available functions. Each function displays
 
 #### Software requirements (optional)
 ```
-apt install -y ccze tmux
+apt install -y ccze tmux tar gunzip unzip rsync smartctl
 ```
 
 #### One command launch
@@ -54,4 +54,5 @@ Remove row from .bashrc and delete file .strong_aliases
 ```
 nano /root/.bashrc
 rm /root/.strong_aliases
+source ~/.bashrc
 ```

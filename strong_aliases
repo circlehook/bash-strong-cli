@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3.2
+# ~/.strong_aliases 1.3.3
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -11,7 +11,7 @@
 # V1.0      26 Dec 2024     Initial release
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
-# V1.3      28 Dec 2024     ngx, net function
+# V1.3      28 Dec 2024     ngx, net, dsk function
 
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
@@ -60,6 +60,7 @@ Functions list:
   sql             :  Mysql   Toolkit
   log             :  Logs    Toolkit 
   ngx             :  Nginx   Toolkit
+  dsk             :  Disk    Toolkit
   net             :  Network Toolkit
 
 Aliases:
@@ -67,7 +68,7 @@ Aliases:
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net\|dsk/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -192,6 +193,115 @@ log(){
   else
     _log_help $FUNCNAME;
   fi
+};
+
+_dsk_help() { echo -e "\n~/.strong_aliases function. Disk Toolkit
+
+ Usage: 
+  $1 info           : (smartctl)   Disk information
+  $1 free           : (df -m)      Free disk space online
+  $1 size    [path] : (du -d 1 -h) Top 10 largest directories
+  $1 save    [path] : (cp -r)      Copy    [path] to /usr/bac/\$(basename [path])-Y-m-d-HM/
+  $1 tar     [path] : (tar -cvf)   Archive [path] to      /../\$(basename [path]).tar
+  $1 gz      [path] : (tar -czvf)  Archive [path] to      /../\$(basename [path]).tar.gz
+  $1 zip     [path] : (zip -r)     Archive [path] to      /../\$(basename [path]).zip
+  $1 unpack  [file] : (tar|gunzip|unzip)  Unpacking any archive (tar|gz|tar.gz|zip)
+  
+  $1 send                                                     : (rsync) Extended help
+  $1 send     [path] [user@host]<:port><:dst_path> <excludes> : (rsync) Send [path] to the host
+  $1 send-bx1 [path] [user@host]<:port><:dst_path> <excludes> :  - / -  with bx excludes (backup,cache)
+  $1 send-bx2 [path] [user@host]<:port><:dst_path> <excludes> :  - / -  with bx excludes (backup,cache,configs)
+
+ Example: 
+  $1 send file.tar root@1.2.3.4               (send to /tmp/upload) 
+  $1 send .        root@1.2.3.4               (send this DIR to /tmp/upload) 
+  $1 send .        root@1.2.3.4:/var/www      (send this DIR to /var/www)
+  $1 send .        root@1.2.3.4:2222:/var/www (not default port)
+  $1 send .        root@1.2.3.4:/vaw/www/USER/data/www/DOMAIN.COM/ \"app/etc/env.php\"
+  $1 send-bx1 /home/bitrix/www root@1.2.3.4:/home/bitrix/www
+  $1 send-bx2 /home/bitrix/www root@1.2.3.4:2222:/home/bitrix/www
+"; };
+_dsk_size(){ du -h --max-depth=1 $1|sort -h|tail -n 11; };
+_dsk_online(){ watch -d df -m -x tmpfs -x overlay -x devtmpfs; };
+_dsk_save(){ 
+   DIR_NAME=$(basename "$1"); PATH_FULL="/usr/bac/$DIR_NAME-$(date +%Y-%m-%d-%H%M)"; 
+   [ ! -d "$PATH_FULL" ] && mkdir -p "$PATH_FULL" || rm -rf "$PATH_FULL"; cp -r "$1/" "$PATH_FULL"; du -d 0 -h "$PATH_FULL"; ls -la /usr/bac | grep "$DIR_NAME"; 
+};
+_dsk_tar(){ tar -cvf $(dirname "$1")/$(basename "$1").tar "$1"; };
+_dsk_gz(){ tar -czvf $(dirname "$1")/$(basename "$1").tar.gz "$1"; };
+_dsk_zip(){ zip -r $(dirname "$1")/$(basename "$1").zip "$1"; };
+_dsk_unpack(){
+  if [[ "$1" =~ \.tar\.gz$ ]]; then
+        tar -xzvf "$1"
+    elif [[ "$1" =~ \.tar$ ]]; then
+        tar -xvf "$1"
+    elif [[ "$1" =~ \.gz$ ]]; then
+        gunzip "$1"
+    elif [[ "$1" =~ \.zip$ ]]; then
+        unzip "$1"
+    else
+        echo "Unknown archive format: $1"
+    fi
+};
+_dsk_info(){ 
+  echo;
+  for DISK in /dev/sd?; do [ -e "$DISK" ] && smartctl -a $DISK | awk '/test result/ {test_result=$NF} /Power_On_Hours/ {print $2, $NF/24, test_result}'; done;
+  for DISK in /dev/nvme???; do [ -e "$DISK" ] && smartctl -a $DISK | grep -E "Temperature:|Percentage Used:"; done; 
+  echo;
+  cat /proc/mdstat;
+};
+_dsk_send(){
+  if [ "$#" -eq 1 ]; then
+   _dsk_notes;
+  else
+   PORT="22";
+   SRC_PATH=$2;
+   ROUTE=$3;
+   EXCLUDES_ARG=$4;
+   EXCLUDE_STR="";
+   
+   OLD_IFS=$IFS;
+   #[[ ! -z "$EXCLUDES_ARG" ]] && EXCLUDES_STR=("${EXCLUDES_ARG[@]}");
+   IFS=' ' read -ra EXCLUDES <<< "$4"
+   for EXCLUDE in "${EXCLUDES[@]}"; do
+     EXCLUDE_STR+="--exclude='$EXCLUDE' "
+     echo -e "$(tput setaf 4)--exclude='$EXCLUDE'$(tput sgr0)";
+   done
+ 
+   IFS=":"; 
+   [[ $ROUTE == *:*:* ]] && read -r ADDRESS PORT DST_PATH <<< "$ROUTE" || read -r ADDRESS DST_PATH <<< "$ROUTE";
+   IFS=$OLD_IFS;
+     
+   [ -z "$DST_PATH" ] && DST_PATH="/tmp/upload/"
+   echo -e "\n$(tput setaf 6)Address: $ADDRESS:$DST_PATH\nPort:   $PORT$(tput sgr0)\n";
+   eval "rsync -avzhP -e \"ssh -p $PORT\" $EXCLUDE_STR $SRC_PATH $ADDRESS:$DST_PATH";
+  fi
+};
+_dsk_send_bx1(){
+  _dsk_send "$@" "bitrix/backup/ bitrix/cache/ bitrix/managed_cache/"
+};
+_dsk_send_bx2(){
+  _dsk_send "$@" "bitrix/backup/ bitrix/cache/ bitrix/managed_cache/ bitrix/php_interface/dbconn.php bitrix/.settings.php"
+};
+dsk(){
+    if [ -n "$1" ]; then
+      case "$1" in
+        "info")    _dsk_info;;
+        "size")    [ -n "$2" ] && _dsk_size "$2";;
+        "save")    [ -n "$2" ] && _dsk_save "$2";;
+        "tar")     [ -n "$2" ] && _dsk_tar "$2";;
+        "gz")      [ -n "$2" ] && _dsk_gz "$2";;
+        "zip")     [ -n "$2" ] && _dsk_zip "$2";;
+        "unpack")  [ -n "$2" ] && _dsk_unpack "$2";;
+        "send")    _dsk_send "$@";;
+        "send-bx1") _dsk_send_bx1 "$@";;
+        "send-bx2") _dsk_send_bx2 "$@";;
+        "free") _dsk_online;;
+        *) _dsk_help $FUNCNAME;;
+       esac 
+    else
+      _dsk_help $FUNCNAME;
+    fi
 };
 
 _ngx_title(){ echo -e "\n$(tput setaf 6)Usage: ngx help$(tput sgr0)\n"; };
