@@ -1,6 +1,7 @@
   ### Encoding 
   ``` echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
-  echo "export LC_ALL=en_US.UTF-8"   >> ~/.bashrc && source ~/.bashrc ```
+  echo "export LC_ALL=en_US.UTF-8"   >> ~/.bashrc && source ~/.bashrc 
+  ```
 
   ### Time 
   -  timedatectl set-time "hh:mm:ss"
