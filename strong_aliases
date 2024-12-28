@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3.1
+# ~/.strong_aliases 1.3.2
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -19,7 +19,10 @@ CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads
 # https://github.com/BMDan/tuning-primer.sh
 MYSQL_TUNING_URL="https://raw.githubusercontent.com/BMDan/tuning-primer.sh/main/tuning-primer.sh"
 # https://github.com/pixelb/ps_mem/
-$RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/master/ps_mem.py";
+RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/master/ps_mem.py";
+
+# My utils
+UTILS_BACKUP="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/files/backup.sh";
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
@@ -283,8 +286,9 @@ _net_exec(){
   fi
 };
 _net_get_utils(){
-  PATH_FTP="/root/utils/"; mkdir -p $PATH_FTP;
-  echo -e "\n$(tput setaf 6)Files downloaded..$(tput sgr0)\n"; 
+  PATH_UTILS="/root/utils/"; mkdir -p $PATH_UTILS;
+  wget -q -O - $UTILS_BACKUP    > $PATH_UTILS/backup.sh;
+  echo -e "\n$(tput setaf 6)Files downloaded..$(tput sgr0)\n";
   chmod +x /root/utils/*; ls -R /root/utils; 
 };
 _net_get(){ 
