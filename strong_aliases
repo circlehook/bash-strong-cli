@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4
+# ~/.strong_aliases 1.4.1
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -92,7 +92,7 @@ cli(){
       "reload") source ~/.bashrc;;
       "fresh")  _cli_fresh; unset PASSWORD;;
       "board")  _cli_board;;
-      "drop") _cli_fresh; rm -rf ~/.strong_aliases; source ~/.bashrc;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli dsk net log ctl ngx sql note;;
       *) _cli_help $FUNCNAME;; 
     esac 
   else
