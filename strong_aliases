@@ -92,7 +92,7 @@ cli(){
       "reload") source ~/.bashrc;;
       "fresh")  _cli_fresh; unset PASSWORD;;
       "board")  _cli_board;;
-      "drop") _cli_fresh; rm -rf ~/.strong_aliases; source ~/.bashrc;;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases; source ~/.bashrc;;
       *) _cli_help $FUNCNAME;; 
     esac 
   else
