@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.1
+# ~/.strong_aliases 1.4.2
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -45,15 +45,15 @@ _cli_help(){
  CLI_VER=$(cat ~/.strong_aliases 2>/dev/null | head -n 1 | awk '{print $3}');
  CLI_WARN="";
  [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"; 
- echo -e " $(_cli_logo) 
-
- ~/.strong_aliases function for aliases management.  Version: $CLI_VER
+ echo -e " ~/.strong_aliases function for aliases management.  Version: $CLI_VER
+ 
+ $(_cli_logo) 
 $CLI_WARN
 Usage: 
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
-  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl log
+  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl log ngx dsk net note
   $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
   $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
 
