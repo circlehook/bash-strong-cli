@@ -1,19 +1,23 @@
   ### Encoding 
-  ``` echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
+  ``` 
+  echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
   echo "export LC_ALL=en_US.UTF-8"   >> ~/.bashrc && source ~/.bashrc 
   ```
 
   ### Time 
-  -  timedatectl set-time "hh:mm:ss"
-  -  timedatectl list-timezones
-  -  timedatectl set-timezone Europe/Kyiv
-  -  hostnamectl set-hostname domain.net.ua
-  
+  ```
+    timedatectl set-time "hh:mm:ss"
+    timedatectl list-timezones
+    timedatectl set-timezone Europe/Kyiv
+    hostnamectl set-hostname domain.net.ua
+  ```
   ### Repositories
   ####  CentOS: cd /etc/yum.repos.d/
-  -    yum clean all 
-  -    yum repolist 
-  -    rpm -qa | grep nginx
+  ```
+      yum clean all 
+      yum repolist 
+      rpm -qa | grep nginx
+  ```
   ####  CentOS7 vault:
   -    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
   -    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
