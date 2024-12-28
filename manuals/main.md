@@ -1,6 +1,6 @@
   ### Encoding 
-  -  echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
-  -  echo "export LC_ALL=en_US.UTF-8"   >> ~/.bashrc && source ~/.bashrc
+  ``` echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
+  echo "export LC_ALL=en_US.UTF-8"   >> ~/.bashrc && source ~/.bashrc ```
 
   ### Time 
   -  timedatectl set-time "hh:mm:ss"
@@ -30,5 +30,5 @@
   -  mkdir -p /home/bitrix/www
   -  chown -R bitrix:bitrix /home/bitrix
   -  mkdir -p /usr/bac
-  -  # nano /etc/group
-  -  # www-data:x:33:bitrix
+  -  nano /etc/group
+  -  www-data:x:33:bitrix
