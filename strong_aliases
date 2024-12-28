@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.4
+# ~/.strong_aliases 1.4.5
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -44,12 +44,12 @@ _cli_help(){
  CLI_VER_NEW=$(wget -O - $CLI_URL 2>/dev/null | head -n 1 | awk '{print $3}');
  CLI_VER=$(cat ~/.strong_aliases 2>/dev/null | head -n 1 | awk '{print $3}');
  CLI_WARN="";
- [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"; 
- echo -e " 
-~/.strong_aliases function for aliases management.  Version: $CLI_VER
-$(_cli_logo) 
+ [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)";
+ echo -e " ~/.strong_aliases function for aliases management.  Version: $CLI_VER
 $CLI_WARN
-Usage: 
+$(_cli_logo)
+
+Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
