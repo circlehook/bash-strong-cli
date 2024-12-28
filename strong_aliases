@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3.8
+# ~/.strong_aliases 1.3.9
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -37,7 +37,7 @@ echo " \___ \  | __| | '__|  / _ \  | '_ \   / _\` |   | |     | |      | |    "
 echo '  ___) | | |_  | |    | (_) | | | | | | (_| |   | |___  | |___   | |    '
 echo ' |____/   \__| |_|     \___/  |_| |_|  \__, |    \____| |_____| |___|   '
 echo '                                       |___/                            ' 
- echo -e '\e[0m\e[37m                          github.com/circlehook/bash-strong-cli \e[0m'
+ echo -e '\e[0m\e[37m                github.com/circlehook/bash-strong-cli \e[0m'
 };
 _cli_help(){ 
  clear
