@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.3
+# ~/.strong_aliases 1.3.1
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Licence: LGPLv2
@@ -11,13 +11,15 @@
 # V1.0      26 Dec 2024     Initial release
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
-# V1.3      28 Dec 2024     ngx function
+# V1.3      28 Dec 2024     ngx, net function
 
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 
 # https://github.com/BMDan/tuning-primer.sh
 MYSQL_TUNING_URL="https://raw.githubusercontent.com/BMDan/tuning-primer.sh/main/tuning-primer.sh"
+# https://github.com/pixelb/ps_mem/
+$RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/master/ps_mem.py";
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
@@ -55,13 +57,14 @@ Functions list:
   sql             :  Mysql   Toolkit
   log             :  Logs    Toolkit 
   ngx             :  Nginx   Toolkit
+  net             :  Network Toolkit
 
 Aliases:
   [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -231,6 +234,116 @@ ngx(){
     esac
   else
     _ngx_help $FUNCNAME;
+  fi
+};
+
+_net_server(){ echo "http://$(curl -s ifconfig.me):$1"; python3 -m http.server $1; };
+_net_ip(){ echo -e "\n$(tput setaf 6)EXTERNAL IP $(tput sgr0) $(curl -s ifconfig.me)\n\n$(tput setaf 6)LOCAL IP \n $(ip -c -br a)\n"; };
+_net_ports(){ iptables -L -n | grep ACCEPT | grep tcp | awk -F " " '{print $7}' | awk -F ":" '{print $2}' | sort -nu | tr '\n' ' ' | tr '\t' ' '; };
+_net_ddos(){ netstat -ntu|awk '{print $5}'|cut -d: -f1 -s|sort|uniq -c|sort -nk1 -r; };
+_net_ciphers(){ nmap --script ssl-enum-ciphers -p 443 $1; };
+_net_banned(){ iptables -L -n | grep REJECT | awk -F " " '{print $4}' | grep -v '^0.0.0.0'; };
+_net_unban(){ fail2ban-client unban $1; };
+_net_expiringssl(){ echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -enddate; };
+_net_exec_python(){
+  SCRIPT_URL=$1
+  PYTHON_NEED=$2
+  PYTHON_TWO="false"
+  PYTHON_THREE="false"
+  if command -v python &> /dev/null; then
+    PYTHON_TWO="true"
+  elif command -v python3 &> /dev/null; then
+    PYTHON_THREE="true" 
+  else
+      echo -e "\nPython not found.\n";
+      exit 1
+  fi
+  if [ "$PYTHON_NEED" == "python"    ] && [ "$PYTHON_TWO"   == "true"  ]; then
+    PYTHON_VER="python"
+  elif [ "$PYTHON_NEED" == "python3" ] && [ "$PYTHON_THREE" == "true"  ]; then
+    PYTHON_VER="python3"
+  elif [ "$PYTHON_NEED" == "python"  ] && [ "$PYTHON_TWO"   == "false" ] && [ "$PYTHON_THREE" == "true" ]; then
+    PYTHON_VER="python3"
+  elif [ "$PYTHON_NEED" == "python3" ] && [ "$PYTHON_THREE" == "false" ] && [ "$PYTHON_TWO" == "true" ]; then
+    PYTHON_VER="python"
+  else
+    echo -e "\nPython not found 2. $PYTHON_VER\n";
+  fi
+  curl -sSL $SCRIPT_URL | $PYTHON_VER -
+};
+_net_exec(){ 
+  if [ -n "$1" ]; then
+    case "$1" in
+       "ram-counter")         _net_exec_python $RAM_COUNTER_URL "python";;
+       "sql-tuning")          curl -sSL $MYSQL_TUNING_URL | bash -s;;
+      *) echo "Make a choice. Use: net help";; 
+    esac 
+  else
+    echo "Make a choice. Use: net help";
+  fi
+};
+_net_get_utils(){
+  PATH_FTP="/root/utils/"; mkdir -p $PATH_FTP;
+  echo -e "\n$(tput setaf 6)Files downloaded..$(tput sgr0)\n"; 
+  chmod +x /root/utils/*; ls -R /root/utils; 
+};
+_net_get(){ 
+  if [ -n "$1" ]; then
+    case "$1" in
+       "utils") _net_get_utils;;
+       *) echo "Make a choice. Use: net help";; 
+    esac 
+  else
+    echo "Make a choice. Use: net help";
+  fi
+};
+_net_help(){
+ echo -e "\n~/.strong_aliases function. Network Toolkit (netstat, ip, nmap, nc, iptables, openssl)\n
+Usage: 
+  $1 stat <string>          :  (netstat -nlpt) OR (netstat -nlptx | grep string)
+  $1 server <port>          :  (python3 -m http.server <port>)  port default: 6789
+  $1 ddos                   :  (netstat)  show active connections of unique IP addresses 
+  $1 ports                  :  (iptables) show open ports                                
+  $1 ls                     :  (ss)       show listening ports                                
+  $1 ip                     :  (ip a)     show local + external IP addresses             
+  $1 banned                 :  (iptables) show list banned IP addresses                  
+  $1 unban   [IP]           :  (fail2ban) unban IP address in all jails and database     
+  $1 ciphers [host]         :  (nmap)     show supported ciphersnmap             
+  $1 expssl  [host]         :  (openssl)  show certificate expiration date             
+  $1 rand    <length>       :  (openssl)  generating a password of a specified length (default: 9)           
+  $1 status  [host] [port]  :  (nc)       report port connection status
+  
+  $1 get utils              : (wget) download scripts and configs to /root/utils
+  
+  $1 exec [scenario]        : (curl) exec without save by URL
+  $1 exec ram-counter       :  - / -  https://github.com/pixelb/ps_mem/blob/master/ps_mem.py 
+  $1 exec sql-tuning        :  - / -  https://github.com/BMDan/tuning-primer.sh/blob/main/tuning-primer.sh
+
+
+";
+};
+net(){
+  if [ -n "$1" ]; then
+    case "$1" in
+      "ddos")        _net_ddos;;
+      "ports")       echo && _net_ports && echo;;
+      "ls")          ss -tln | awk '{print $4}' | grep -o '[0-9]*$' | sort -nu | tr '\n' ' ';;
+      "banned")      _net_banned;;
+      "unban")       _net_unban "$2";;
+      "stat")        [ -n "$2" ] &&  netstat -nlptx | grep "$2" || netstat -nlpt;; 
+      "server")      [ -n "$2" ] && _net_server "$2" || _net_server "6789";;
+      "ip")          _net_ip;;
+      "ciphers")     _net_ciphers "$2";;
+      "expssl")      _net_expiringssl "$2";;
+      "status")      [ $# -ge 3 ] && nc -zv $2 $3;;
+      "exec")        _net_exec "${@:2}";;
+      "install")     [ $# -ge 3 ] && _net_install "$2" "$3";;
+      "get")         [ -n "$2" ] && _net_get "$2";;
+      "rand")        [ -n "$2" ] && openssl rand -base64 "$2" || openssl rand -base64 9;;
+      *)             _net_help "$FUNCNAME";; 
+    esac 
+  else
+    _net_help "$FUNCNAME";
   fi
 };
 
