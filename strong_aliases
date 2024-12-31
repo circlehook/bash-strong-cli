@@ -323,6 +323,7 @@ _dsk_send_bx1(){
 _dsk_send_bx2(){
   _dsk_send "$@" "bitrix/backup/ bitrix/cache/ bitrix/managed_cache/ bitrix/php_interface/dbconn.php bitrix/.settings.php"
 };
+_dsk_notes(){  echo -e ""; };
 dsk(){
     if [ -n "$1" ]; then
       case "$1" in
