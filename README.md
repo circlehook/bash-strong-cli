@@ -1,6 +1,9 @@
 # About 
 The file **strong_aliases** contains bash functions and aliases. That are include in the .bashrc, to quickly perform daily tasks in the console.
 
+![Main function CLI](https://github.com/circlehook/bash-strong-cli/blob/main/files/cli.png "Main function CLI")
+
+
 # Manual
 Main function **cli** show a list of available functions. Each function displays help when launched.
 -  ctl             :  System  Toolkit 
