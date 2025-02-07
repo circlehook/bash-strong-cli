@@ -24,7 +24,7 @@ RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/mast
 
 # My utils
 UTILS_BACKUP="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/files/backup.sh";
-MAN_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/manuals";
+MAN_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/notes";
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
