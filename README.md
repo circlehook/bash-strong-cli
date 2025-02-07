@@ -18,7 +18,7 @@ Main function **cli** show a list of available functions. Each function displays
 
 #### Software requirements (optional)
 ```
-apt install -y ccze tmux tar gunzip unzip rsync smartctl
+apt install -y ccze tmux tar gunzip unzip rsync smartmontools
 ```
 
 #### One command launch
