@@ -38,28 +38,32 @@ cli
 
 # Pretty launch on your domain
 
-#### Create a file cli.sh in the root of the site
+#### Create a file cli.sh in the root of your site
 ```
 #!/bin/bash
 
 wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
 grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
 ```
-
+#### Install and run
+```
+curl https://your.domain/cli.sh | bash                # need re-login
+curl https://your.domain/cli.sh | bash && exec bash   # or with restart bash
+cli 
+```
 #### One command launch
 ```
-curl https://example.com/cli.sh | bash && source ~/.bashrc && cli
+curl https://your.domain/cli.sh | bash && source ~/.bashrc && cli
 ```
-
 # Uninstall
 To uninstall aliases, run:
 ```
 cli drop
 ```
 #### Manual uninstall
-Remove row from .bashrc and delete file .strong_aliases 
+Remove row from ~/.bashrc, delete file ~/.strong_aliases and re-login to console
 ```
 nano /root/.bashrc
 rm /root/.strong_aliases
-source ~/.bashrc
+source ~/.bashrc        
 ```
