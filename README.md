@@ -1,7 +1,7 @@
 # About 
 The file **strong_aliases** contains bash functions and aliases. That are include in the ~/.bashrc, to quickly perform daily tasks in the console. SSH root access required.
 
-![Main function CLI](https://github.com/circlehook/bash-strong-cli/blob/main/files/cli.png "Main function CLI")
+![Main function CLI](./files/cli.png "Main function CLI")
 
 
 # Manual
