@@ -8,12 +8,12 @@ The file **strong_aliases** contains bash functions and aliases. That are includ
 Main function **cli** show a list of available functions. Each function displays help when launched.
 | Function    |  Description         | Screenshot   | 
 | ----------- |  ------------------- | ----------   | 
-|  ctl        |  System  Toolkit     |	![function CTL](./files/ctl.png =250x "function CTL")			|
-|  sql        |  Mysql   Toolkit     |	![function SQL](./files/sql.png =250x "function SQL")			|
+|  ctl        |  System  Toolkit     |	[screenshot](./files/ctl.png)			|
+|  sql        |  Mysql   Toolkit     |	[screenshot](./files/sql.png)			|
 |  log        |  Logs    Toolkit     |				|
 |  ngx        |  Nginx   Toolkit     |				|
-|  dsk        |  Disk    Toolkit     |	![function DSK](./files/dsk.png =250x "function DSK")			|
-|  net        |  Network Toolkit     |	![function NET](./files/net.png =250x "function NET")			|
+|  dsk        |  Disk    Toolkit     |	[screenshot](./files/dsk.png)			|
+|  net        |  Network Toolkit     |	[screenshot](./files/net.png)			|
 |  note       |  Network txt viewer  |				|
 
 
