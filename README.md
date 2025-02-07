@@ -6,7 +6,7 @@ The file **strong_aliases** contains bash functions and aliases. That are includ
 
 # Manual
 Main function **cli** show a list of available functions. Each function displays help when launched.
-| Function    |  Description         | Screenshot   | 
+| Function    |  Description         | Manual   | 
 | ----------- |  ------------------- | ----------   | 
 |  ctl        |  System  Toolkit     |	[screenshot](./files/ctl.png)			|
 |  sql        |  Mysql   Toolkit     |	[screenshot](./files/sql.png)			|
