@@ -6,13 +6,16 @@ The file **strong_aliases** contains bash functions and aliases. That are includ
 
 # Manual
 Main function **cli** show a list of available functions. Each function displays help when launched.
--  ctl             :  System  Toolkit 
--  sql             :  Mysql   Toolkit
--  log             :  Logs    Toolkit 
--  ngx             :  Nginx   Toolkit
--  dsk             :  Disk    Toolkit
--  net             :  Network Toolkit
--  note            :  Network txt viewer
+| Function    |  Description         | Screenshot   | 
+| ----------- |  ------------------- | ----------   | 
+|  ctl        |  System  Toolkit     |	![function CTL](./files/ctl.png "function CTL")			|
+|  sql        |  Mysql   Toolkit     |	![function SQL](./files/sql.png "function SQL")			|
+|  log        |  Logs    Toolkit     |				|
+|  ngx        |  Nginx   Toolkit     |				|
+|  dsk        |  Disk    Toolkit     |	![function DSK](./files/dsk.png "function DSK")			|
+|  net        |  Network Toolkit     |	![function NET](./files/net.png "function NET")			|
+|  note       |  Network txt viewer  |				|
+
 
 # Install
 
