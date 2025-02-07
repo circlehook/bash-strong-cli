@@ -50,8 +50,8 @@ grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.str
 ```
 #### Install and run
 ```
-curl https://your.domain/cli.sh | bash                # need re-login
-curl https://your.domain/cli.sh | bash && exec bash   # without re-login, with restart bash
+curl https://your.domain/cli.sh | bash                       # need re-login
+curl https://your.domain/cli.sh | bash && source ~/.bashrc   # without re-login, with reload ~/.bashrc
 cli 
 ```
 #### One command launch
