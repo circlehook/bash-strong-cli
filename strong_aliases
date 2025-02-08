@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.6
+# ~/.strong_aliases 1.4.7
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -28,6 +28,7 @@ MAN_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads
 
 alias rgb='ccze -A';
 alias tailf='tail -f';
+alias ll='ls -la';
 
 _cli_logo(){
  echo -e '\e[95m'
