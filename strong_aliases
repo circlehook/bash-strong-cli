@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.9
+# ~/.strong_aliases 1.4.10
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -13,6 +13,7 @@
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
 # V1.3      28 Dec 2024     ngx, net, dsk, note function
+# V1.4      22 Nov 2025     update
 
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
@@ -83,7 +84,6 @@ Functions list:
   ngx             :  Nginx   Toolkit
   dsk             :  Disk    Toolkit
   net             :  Network Toolkit
-  note            :  Network txt viewer
 
 Aliases:
   footer FILE         :  (tail -n) Show last 1000 lines
@@ -123,63 +123,39 @@ cli(){
   fi
 };
 
-_note_get(){ 
-  if [ -n "$1" ]; then
-    http_status=$(curl -s -o /dev/null -w "%{http_code}" "$MAN_URL/$1.md")
-    if [ $http_status -eq 200 ]; then
-      echo && echo -e "Manual are loading..." && echo; #sleep 1;
-      curl -sSL "$MAN_URL/$1.md" | grep -v '```' | cat; echo -e "\n";
-    else
-      echo -e "Заметка недоступна($http_status).\n"
-    fi
+_ctl_crons(){
+  _title "/etc/crontab"
+  cat /etc/crontab | grep -vE '^SHELL|^PATH|^MAILTO|^#|^$'
+  USERS=$(cat /etc/passwd | grep sh | grep -v nologin | awk -F ':' '{print $1}')
+  for USER in $USERS; do
+    if crontab -l -u "$USER" >/dev/null 2>&1; then
+    _title "${USER}:"
+    crontab -l -u "$USER"
   fi
+done
 };
-_note_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
-_note_help(){
-  echo -e "
-~/.strong_aliases function. Network txt viewer  
-
-Usage: 
-  $1 [file-name]     :   (curl) display without save /bash-strong-cli/tree/main/manuals/[file-name].md
-                       :    - / -  Available file list: 
-                       :    - / -  main
-
-Examples:
-  $1 main
-  $1 main | rgb
-
-";};
-note(){
-  if [ -n "$1" ]; then
-    case "$1" in
-      "help") _note_help $FUNCNAME;; 
-      *)      _note_get "$1";;
-    esac 
-  else
-    _note_help $FUNCNAME;
-  fi
-};
-
-_ctl_title(){ echo -e "\n$(tput setaf 6)Usage: $1 help$(tput sgr0)\n"; };
 _ctl_help(){
   echo -e " 
-~/.strong_aliases function. System tools management
+~/.robot_aliases function. System tools management
 
 Usage: 
-  $1 list-fail                   :   (systemctl)   list fail services
-  $1 list                        :   (systemctl)   list services + installed unit files
-  $1 %               [string]    :   (systemctl)  (list services + installed unit files) | grep [string]
-  $1 tree                        :   (systemctl)  tree services  
+  $1 list-fail                    :   (systemctl)   list fail services
+  $1 list                         :   (systemctl)   list services + installed unit files
+  $1 %               [string]     :   (systemctl)  (list services + installed unit files) | grep [string]
+  $1 tree                         :   (systemctl)  tree services  
   
-  $1 [=|+|-|@]       [service]   :   (systemctl)  status/start/stop/restart [service]  
-  $1 [boot|on|off]   [service]   :   (systemctl)  check/enable/disable/ start on boot  
-  $1 unit            [service]   :   (systemctl edit --full [service]) (needs daemon-reload)
-  $1 reload                      :   (systemctl daemon-reload)
+  $1 [=|+|-|@]       [service]    :   (systemctl)  status/start/stop/restart [service]  
+  $1 [boot|on|off]   [service]    :   (systemctl)  check/enable/disable/ start on boot  
+  $1 unit            [service]    :   (systemctl edit --full [service]) (needs daemon-reload)
+  $1 reload                       :   (systemctl daemon-reload)
 
-  $1 name            <hostname>  :   (hostnamectl set-hostname <hostname>) OR (hostnamectl | grep hostname) 
-  $1 time            <time>      :   (timedatectl set-time     <time>    ) OR (timedatectl | grep Local)
-  $1 zone            <timezone>  :   (timedatectl set-timezone <timezone>) OR (timedatectl | grep zone)
-  $1 zones           <string>    :   (timedatectl list-timezones) OR (timedatectl list-timezones | grep -i <string>) 
+  $1 crons                        :   (crontab)    show all crontab tasks
+  $1 [crontab|fstab|hosts|resolv] :   (nano)       edit /etc/{crontab|fstab|hosts|resolv.conf}
+  $1 [os|passwd|group]            :   (cat)        cat /etc/{os-release|passwd|group}
+  $1 name            <hostname>   :   (hostnamectl set-hostname <hostname>) OR (hostnamectl | grep hostname) 
+  $1 time            <time>       :   (timedatectl set-time     <time>    ) OR (timedatectl | grep Local)
+  $1 zone            <timezone>   :   (timedatectl set-timezone <timezone>) OR (timedatectl | grep zone)
+  $1 zones           <string>     :   (timedatectl list-timezones) OR (timedatectl list-timezones | grep -i <string>) 
  
 Examples:
   $1 % fire     OR  $1 list | grep fire   
@@ -193,6 +169,7 @@ Examples:
 
 ";
 };
+
 ctl(){
   if [ -n "$1" ]; then
     case "$1" in
@@ -201,6 +178,14 @@ ctl(){
       "reload")      systemctl daemon-reload;; 
       "list-fail")   systemctl -at service | grep -E 'fail|not-found';; 
       "list")        systemctl -at service --no-pager; systemctl list-unit-files --no-pager;;
+      "crons")       _ctl_crons;;
+      "crontab")     nano /etc/crontab;;
+      "fstab")       nano /etc/fstab;;
+      "hosts")       nano /etc/hosts;;
+      "resolv")      nano /etc/resolv.conf;;
+      "os")          cat /etc/os-release;;
+      "passwd")      cat /etc/passwd;;
+      "group")       cat /etc/group;;
       "%")           [ -n "$2" ] && systemctl -at service | grep $2; systemctl list-unit-files | grep $2;; 
       "unit")        [ -n "$2" ] && systemctl edit --full $2;; 
       "boot")        [ -n "$2" ] && systemctl is-enabled $2;; 
@@ -214,7 +199,7 @@ ctl(){
       "zone")        [ -n "$2" ] && timedatectl set-timezone $2 || timedatectl | grep zone;; 
       "time")        [ -n "$2" ] && timedatectl set-time $2 || timedatectl | grep Local;; 
       "zones")       [ -n "$2" ] && timedatectl list-timezones | grep -i $2 || timedatectl list-timezones;; 
-      *) _ctl_title $FUNCNAME && systemctl "$@";; 
+      *) _title "Usage: $FUNCNAME help" && systemctl "$@";; 
     esac 
   else
     _ctl_help $FUNCNAME;
