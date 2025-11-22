@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.1
+# ~/.strong_aliases 1.5.2
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -67,11 +67,11 @@ if echo "$CLI_CONTENT" | head -n1 | grep -q 'strong_aliases'; then
     [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="\n$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"
 fi
  echo -e "$(_cli_logo)
-Home page:         https://github.com/circlehook/bash-strong-cli
-Description:       ~/.strong_aliases function for aliases management.
-Version:           $CLI_VER $CLI_WARN
+Home page         : https://github.com/circlehook/bash-strong-cli
+Description       : ~/.strong_aliases function for aliases management.
+Version           : $CLI_VER $CLI_WARN
+
     
-URL:                https://github.com/circlehook/bash-strong-cli
 Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
@@ -481,7 +481,6 @@ _net_exec(){
     case "$1" in
        "ram-counter")         _net_exec_python $RAM_COUNTER_URL "python";;
        "sql-tuning")          curl -sSL $MYSQL_TUNING_URL | bash -s;;
-       "web-audit")           curl -sSL $WEB_AUDIT_URL | bash -s;;
       *) _title "$NET_GET_TITLE";;
     esac 
   else
