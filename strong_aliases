@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.4
+# ~/.strong_aliases 1.5.5
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -13,7 +13,7 @@
 # V1.1      26 Dec 2024     cli function
 # V1.2      27 Dec 2024     create ctl, sql, log functions
 # V1.3      28 Dec 2024     ngx, net
-# V1.4      22 Nov 2025     cf, fp, fs
+# V1.5      22 Nov 2025     cf, fp, fs
 
 CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
 CF_API_URL="https://api.cloudflare.com/client/v4";
@@ -441,7 +441,6 @@ Usage:
   $1 get utils              : (wget) download scripts and configs to /root/utils
   
   $1 exec [scenario]        : (curl) exec without save by URL
-  $1 exec web-audit         :  - / -  /source/tools/audit/web-audit.sh
   $1 exec ram-counter       :  - / -  /source/tools/ram-counter.py   
   $1 exec sql-tuning        :  - / -  https://github.com/BMDan/tuning-primer.sh/blob/main/tuning-primer.sh
 
@@ -889,5 +888,7 @@ dcr(){
      *)          docker "$@";;
     esac
   fi
-}
+};
+
+
 
