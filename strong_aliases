@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.10
+# ~/.strong_aliases 1.4.12
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -48,14 +48,14 @@ hide(){
 };
 
 _cli_logo(){
- echo -e '\e[95m'
+echo -e '\e[95m'
 echo '  ____    _                                       ____   _       ___   '
 echo ' / ___|  | |_   _ __    ___    _ __     __ _     / ___| | |     |_ _|   '
 echo " \___ \  | __| | '__|  / _ \  | '_ \   / _\` |   | |     | |      | |    "
 echo '  ___) | | |_  | |    | (_) | | | | | | (_| |   | |___  | |___   | |    '
 echo ' |____/   \__| |_|     \___/  |_| |_|  \__, |    \____| |_____| |___|   '
 echo '                                       |___/                            ' 
- echo -e '\e[0m\e[37m                github.com/circlehook/bash-strong-cli \e[0m'
+ echo -e '\e[0m\e[37m \e[0m'
 };
 _cli_help(){ 
  clear
@@ -64,10 +64,13 @@ if echo "$CLI_CONTENT" | head -n1 | grep -q 'strong_aliases'; then
     CLI_VER_NEW=$(echo "$CLI_CONTENT" | head -n1 | awk '{print $3}')
     CLI_VER=$(head -n1 ~/.strong_aliases 2>/dev/null | awk '{print $3}')
     CLI_WARN=""
-    [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"
+    [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="\n$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"
 fi
- echo -e " ~/.strong_aliases function for aliases management.  Version: $CLI_VER $CLI_WARN
-$(_cli_logo)
+ echo -e "$(_cli_logo)
+
+~/.strong_aliases function for aliases management.  Version: $CLI_VER $CLI_WARN
+    
+Home page:         https://github.com/circlehook/bash-strong-cli
 
 Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
