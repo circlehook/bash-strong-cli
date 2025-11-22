@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.4.7
+# ~/.strong_aliases 1.4.8
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -26,9 +26,25 @@ RAM_COUNTER_URL="https://raw.githubusercontent.com/pixelb/ps_mem/refs/heads/mast
 UTILS_BACKUP="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/files/backup.sh";
 MAN_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/notes";
 
+alias ips="awk '{print \$1}' | sort | uniq -c | sort -nr";
 alias rgb='ccze -A';
 alias tailf='tail -f';
-alias ll='ls -la';
+alias footer='tail -n 1000';
+_title(){ echo -e "\n$(tput setaf 6)$1$(tput sgr0)\n"; };
+live(){
+    if [ -z "$1" ]; then
+        echo "Usage: live COMMAND"
+        return 1
+    fi
+    watch -d "bash -ci \"$1\""
+};
+hide(){
+    if [ $# -eq 1 ]; then
+        grep -vE "$1"
+    else
+        echo -e "\n~/.robot_aliases function. grep -vE \n\nUsage:\n STDOUT | hide 'STRING1|STRING2'\n";
+    fi
+};
 
 _cli_logo(){
  echo -e '\e[95m'
@@ -42,10 +58,13 @@ echo '                                       |___/                            '
 };
 _cli_help(){ 
  clear
- CLI_VER_NEW=$(wget -O - $CLI_URL 2>/dev/null | head -n 1 | awk '{print $3}');
- CLI_VER=$(cat ~/.strong_aliases 2>/dev/null | head -n 1 | awk '{print $3}');
- CLI_WARN="";
- [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="\n $(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)";
+CLI_CONTENT=$(wget -q -O - "$CLI_URL" 2>/dev/null)
+if echo "$CLI_CONTENT" | head -n1 | grep -q 'strong_aliases'; then
+    CLI_VER_NEW=$(echo "$CLI_CONTENT" | head -n1 | awk '{print $3}')
+    CLI_VER=$(head -n1 ~/.strong_aliases 2>/dev/null | awk '{print $3}')
+    CLI_WARN=""
+    [ "$CLI_VER" != "$CLI_VER_NEW" ] && CLI_WARN="$(tput setaf 3)  Needs to be updated to version $CLI_VER_NEW\n  Run: $1 update$(tput sgr0)\n"
+fi
  echo -e " ~/.strong_aliases function for aliases management.  Version: $CLI_VER $CLI_WARN
 $(_cli_logo)
 
@@ -67,11 +86,15 @@ Functions list:
   note            :  Network txt viewer
 
 Aliases:
-  [stdout] | rgb  :  Colorize [stdout] with CCZE (tailf file.log | rgb)
+  footer FILE         :  (tail -n) Show last 1000 lines
+  live   \"COMMAND\"    :  (watch)   Display live 
+  STDOUT | ips        :  (sort)    Show TOP unique IPs 
+  STDOUT | rgb        :  (ccza -A) Colorize STDOUT using ccze(1)
+  STDOUT | hide EXPR  :  (grep -v) Invert match grep(1)
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ctl\|log\|ngx\|net\|dsk\|note/d' ~/.bash_history;};
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ngx\|net\|fs\|ctl\|dcr\|log\|note\|scan\|dsk\|ips\|hide\|rgb\|fp\|cf/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
@@ -92,7 +115,7 @@ cli(){
       "reload") source ~/.bashrc;;
       "fresh")  _cli_fresh; unset PASSWORD;;
       "board")  _cli_board;;
-      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli dsk net log ctl ngx sql note;;
+      "drop") _cli_fresh; rm -rf ~/.strong_aliases; unset cli sql ngx net fs dcr ctl log note fp cf;;
       *) _cli_help $FUNCNAME;; 
     esac 
   else
