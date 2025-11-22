@@ -15,7 +15,7 @@
 # V1.3      28 Dec 2024     ngx, net
 # V1.5      22 Nov 2025     cf, fp, fs
 
-CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases";
+CLI_URL="https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases.sh";
 CF_API_URL="https://api.cloudflare.com/client/v4";
 
 # https://github.com/BMDan/tuning-primer.sh
