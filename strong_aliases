@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.2
+# ~/.strong_aliases 1.5.3
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -70,19 +70,18 @@ fi
 Home page         : https://github.com/circlehook/bash-strong-cli
 Description       : ~/.strong_aliases function for aliases management.
 Version           : $CLI_VER $CLI_WARN
-
     
 Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
-  $1 fresh       : clear  ~/.bash_history from words: cli sql ctl log ngx dsk net note
+  $1 fresh       : clear  ~/.bash_history from words: cli cf ctl dcr fp fs log ngx net sql 
   $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
   $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
 
 Functions list:
-  ctl             :  System         Toolkit
   cf              :  Cloudflare API Toolkit
+  ctl             :  System         Toolkit
   dcr             :  Docker         Toolkit  
   fs              :  File System    Toolkit
   fp              :  Fastpanel      Toolkit
@@ -100,7 +99,7 @@ Aliases:
 
 ";
 };
-_cli_fresh(){   history -c; sed -i '/cli\|sql\|ngx\|net\|fs\|ctl\|dcr\|log\|note\|scan\|dsk\|ips\|hide\|rgb\|fp\|cf/d' ~/.bash_history; };
+_cli_fresh(){   history -c; sed -i '/cli\|sql\|ngx\|net\|fs\|ctl\|dcr\|log\|note\|scan\|ips\|hide\|rgb\|fp\|cf/d' ~/.bash_history; };
 _cli_board(){
   echo '
     bind-key v split-window -h
