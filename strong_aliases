@@ -75,7 +75,7 @@ Usage:
   $1 update      : update ~/.strong_aliases && source ~/.bashrc
   $1 edit        : edit   ~/.strong_aliases
   $1 reload      : source ~/.bashrc 
-  $1 fresh       : clear  ~/.bash_history from words: cli cf ctl dcr fp fs log ngx net sql 
+  $1 fresh       : clear  ~/.bash_history from keywords
   $1 drop        : clear  ~/.bash_history && remove ~/.strong_aliases
   $1 board       : open TMUX session \"board\". Press Ctrl+B then D to detach session
 
