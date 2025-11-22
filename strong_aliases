@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.3
+# ~/.strong_aliases 1.5.4
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -43,7 +43,7 @@ hide(){
     if [ $# -eq 1 ]; then
         grep -vE "$1"
     else
-        echo -e "\n~/.robot_aliases function. grep -vE \n\nUsage:\n STDOUT | hide 'STRING1|STRING2'\n";
+        echo -e "\n~/.strong_aliases function. grep -vE \n\nUsage:\n STDOUT | hide 'STRING1|STRING2'\n";
     fi
 };
 
@@ -94,7 +94,7 @@ Aliases:
   footer FILE         :  (tail -n) Show last 1000 lines
   live   \"COMMAND\"    :  (watch)   Display live 
   STDOUT | ips        :  (sort)    Show TOP unique IPs 
-  STDOUT | rgb        :  (ccza -A) Colorize STDOUT using ccze(1)
+  STDOUT | rgb        :  (ccze -A) Colorize STDOUT using ccze(1)
   STDOUT | hide EXPR  :  (grep -v) Invert match grep(1)
 
 ";
@@ -141,7 +141,7 @@ done
 };
 _ctl_help(){
   echo -e " 
-~/.robot_aliases function. System tools management
+~/.strong_aliases function. System tools management
 
 Usage: 
   $1 list-fail                    :   (systemctl)   list fail services
@@ -212,7 +212,7 @@ ctl(){
 };
 _log_help(){
   echo -e " 
-~/.robot_aliases function. Logs Toolkit
+~/.strong_aliases function. Logs Toolkit
 
 Usage: 
   $1 size                            : (journalctl) journalctl disk usage  
@@ -247,7 +247,7 @@ log(){
   fi
 };
 
-_fs_help() { echo -e "\n~/.robot_aliases function. File system Toolkit
+_fs_help() { echo -e "\n~/.strong_aliases function. File system Toolkit
 
  Usage: 
   $1 info                 : (smartctl)   Disk information
@@ -377,7 +377,7 @@ else
 fi
 };
 _fp_help(){
- echo -e "\n~/.robot_aliases function. Fastpanel Toolkit (mogwai)\n
+ echo -e "\n~/.strong_aliases function. Fastpanel Toolkit (mogwai)\n
 Usage: 
   $1 transfer [DOMAINS]   :  (mogwai) Domains info for transfer
   $1 sites                :  (mogwai) Pretty list all sites
@@ -404,7 +404,7 @@ _fp_transfer(){
 };
 fp(){
   if ! command -v mogwai &> /dev/null; then
-    echo -n "The mogwai utility was not found. Using the function is not possible.\n"
+    echo -e "The mogwai utility was not found. Using the function is not possible.\n\n"
     return 1
   fi
 
@@ -421,7 +421,7 @@ fp(){
 }
 
 _net_help(){
- echo -e "\n~/.robot_aliases function. Network Toolkit (netstat, ip, nmap, nc, iptables, openssl)\n
+ echo -e "\n~/.strong_aliases function. Network Toolkit (netstat, ip, nmap, nc, iptables, openssl)\n
 Usage: 
   $1 stat <string>          :  (netstat -nlpt) OR (netstat -nlptx | grep string)
   $1 server <port>          :  (python3 -m http.server <port>)  port default: 6789
@@ -542,7 +542,7 @@ net(){
 };
 
 _cf_help(){
- echo -e "\n~/.robot_aliases function. Cloudflare API Toolkit (curl,jq)\n
+ echo -e "\n~/.strong_aliases function. Cloudflare API Toolkit (curl,jq)\n
 (CF_TOKEN environment variable is required)
 
 Usage: 
@@ -689,7 +689,7 @@ cf(){
 };
 
 _ngx_help() { echo -e "
-~/.robot_aliases Nginx Toolkit.
+~/.strong_aliases Nginx Toolkit.
 
  Usage:
   $1 [sites|logs|ssl]       : (grep)      grep keywords in /etc/nginx
@@ -771,7 +771,7 @@ _sql_makezabbix(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF E
 _sql_makebareos(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'bareos'@'localhost'; CREATE USER 'bareos'@'localhost' IDENTIFIED BY '$PASSWORD'; GRANT USAGE ON *.* TO 'bareos'@'localhost'; GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, PROCESS, EXECUTE, TRIGGER ON *.* TO 'bareos'@'localhost'; FLUSH PRIVILEGES;"; echo -e "[client]\nusername=bareos\npassword=$PASSWORD" > /root/.bareos.cnf;cat /root/.bareos.cnf; };
 
 _sql_help(){ echo "
-~/.robot_aliases function. Mysql Toolkit (mysql, mysqldump).
+~/.strong_aliases function. Mysql Toolkit (mysql, mysqldump).
 
 Usage:
  $1 memory                  : show RAM Mysql usage
@@ -849,7 +849,7 @@ _dcr_run(){
 };
 _dcr_uninstall(){  apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras;rm -rf /var/lib/docker; rm -rf /var/lib/containerd; rm /etc/apt/sources.list.d/docker.list;rm /etc/apt/keyrings/docker.asc;};
 _dcr_help() { echo -e "
-~/.robot_aliases Docker Toolkit.
+~/.strong_aliases Docker Toolkit.
 
  Usage:
   $1 all                 :   (docker) container ls -a
