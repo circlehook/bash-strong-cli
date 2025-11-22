@@ -1,4 +1,4 @@
-# About 
+# About
 The file **strong_aliases** contains bash functions and aliases. That are include in the ~/.bashrc, to quickly perform daily tasks in the console. SSH root access required.
 
 ![Main function CLI](./files/cli.png "Main function CLI")
@@ -28,9 +28,9 @@ apt install -y ccze tmux tar gunzip unzip rsync smartmontools
 ```
 curl https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/install.sh | bash && source ~/.bashrc && cli
 ``` 
-#### Manual install 
+#### Manual install
 ```
-wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
+wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases.sh > ~/.strong_aliases
 grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
 source ~/.bashrc
 ```
@@ -45,7 +45,7 @@ cli
 ```
 #!/bin/bash
 
-wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases > ~/.strong_aliases
+wget -q -O - https://raw.githubusercontent.com/circlehook/bash-strong-cli/refs/heads/main/strong_aliases.sh > ~/.strong_aliases
 grep -q "strong_aliases" ~/.bashrc || echo "[ -f ~/.strong_aliases ] && . ~/.strong_aliases" >> ~/.bashrc
 ```
 #### Install and run
