@@ -770,7 +770,7 @@ _sql_makezabbix(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF E
 _sql_makebareos(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'bareos'@'localhost'; CREATE USER 'bareos'@'localhost' IDENTIFIED BY '$PASSWORD'; GRANT USAGE ON *.* TO 'bareos'@'localhost'; GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, PROCESS, EXECUTE, TRIGGER ON *.* TO 'bareos'@'localhost'; FLUSH PRIVILEGES;"; echo -e "[client]\nusername=bareos\npassword=$PASSWORD" > /root/.bareos.cnf;cat /root/.bareos.cnf; };
 
 _sql_help(){ echo "
-~/.robot_aliases function. Mysql Toolkit (mysql, mysqldump).
+~/.strong_aliases function. Mysql Toolkit (mysql, mysqldump).
 
 Usage:
  $1 memory                                             : show RAM Mysql usage
