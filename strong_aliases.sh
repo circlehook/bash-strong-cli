@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.6
+# ~/.strong_aliases 1.5.7
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -826,7 +826,7 @@ sql(){
       "grantselect") [ $# -ge 3 ] && mysql -e "GRANT SELECT  PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
       "user")     [ -n "$2" ] && mysql -e "SHOW GRANTS FOR $2;";;
       "password") [ -n "$2" ] && mysql -e "ALTER USER $2 IDENTIFIED BY '$3';";;
-      "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2;";;
+      "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2; SELECT USER,Host FROM mysql.user;";;
       "tuning")   curl -L $MYSQL_TUNING_URL | bash;;
       "makezabbix") _sql_makezabbix;;
       "makebareos") _sql_makebareos;;
@@ -836,6 +836,7 @@ sql(){
     fi
   fi
 };
+
 
 
 _dcr_run(){ 
