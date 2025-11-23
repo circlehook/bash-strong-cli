@@ -1,4 +1,4 @@
-# ~/.strong_aliases 1.5.5
+# ~/.strong_aliases 1.5.6
 # Author:  Dmitry Vinichenko <circlehook.pro at gmail.com>
 # Website: https://github.com/circlehook/bash-strong-cli
 # Docs: https://github.com/circlehook/bash-strong-cli/blob/main/README.md
@@ -770,34 +770,35 @@ _sql_makezabbix(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF E
 _sql_makebareos(){ PASSWORD=$(openssl rand -base64 12); mysql -e "DROP USER IF EXISTS 'bareos'@'localhost'; CREATE USER 'bareos'@'localhost' IDENTIFIED BY '$PASSWORD'; GRANT USAGE ON *.* TO 'bareos'@'localhost'; GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT, PROCESS, EXECUTE, TRIGGER ON *.* TO 'bareos'@'localhost'; FLUSH PRIVILEGES;"; echo -e "[client]\nusername=bareos\npassword=$PASSWORD" > /root/.bareos.cnf;cat /root/.bareos.cnf; };
 
 _sql_help(){ echo "
-~/.strong_aliases function. Mysql Toolkit (mysql, mysqldump).
+~/.robot_aliases function. Mysql Toolkit (mysql, mysqldump).
 
 Usage:
- $1 memory                  : show RAM Mysql usage
- $1 variables               : show Mysql variables
- $1 bases                   : show databases with size
- $1 create [dbname]         : create database
- $1 base   [dbname]         : show database owners
- $1 tables [dbname]         : show database tables 
- $1 drop   [dbname]         : drop database 
- $1 dump   [dbname]         : dump database to this directory on \"[dbname].sql\"
- $1 copy   [dbname] [newdb] : create database \"newdb\" + copy database \"dbname\" to \"newdb\" 
+ $1 memory                                             : show RAM Mysql usage
+ $1 variables                                          : show Mysql variables
+ $1 bases                                              : show databases list with size
+ $1 tables      [dbname]                               : show database tables 
+ $1 create      [dbname]                               : (mysql -e \"create database DBNAME;\")
+ $1 base        [dbname]                               : (mysql -e \"select user, host, db from mysql.db WHERE db = 'DBNAME';\")
+ $1 drop        [dbname]                               : (mysql -e \"drop database DBNAME;\") __NEED_TO_ENTER_CAPTCHA__
+ $1 copy        [dbname] [dbname2]                     : (mysqldump DBNAME | mysql DBNAME2)
+ $1 dump        [dbname]                               : (mysqldump DBNAME > ./DBNAME.sql) 
   
- $1 users                                        : show users
- $1 makeowner  [user]<@host> [password] [dbname] : create user + grant all privileges on the db
- $1 makereader [user]<@host> [password] [dbname] : create user + grant select         on the db
- $1 user       [user]<@host>                     : show user grants 
- $1 password   [user]<@host> [password]          : reset user password
- $1 dropuser   [user]<@host>                     : drop user
- 
- $1 makezabbix  : create mysql zabbix user + write access to /etc/zabbix/.my.cnf
- $1 makebareos  : create mysql bareos user + write access to /root/.bareos.cnf
- $1 tuning      : running a script from the repository https://github.com/BMDan/tuning-primer.sh
+ $1 users                                              : (mysql -e \"select user,host from mysql.user;\")
+ $1 user        [user_name]<@host>                     : (mysql -e \"show grants for USER_NAME;\")
+ $1 createuser  [user_name]<@host> [password]          : (mysql -e \"create user USER_NAME identified by 'PASSWORD';\")
+ $1 grantselect [user_name]<@host> [dbname]            : (mysql -e \"grant select on DBNAME . * to USER_NAME; flush privileges;\")
+ $1 grantall    [user_name]<@host> [dbname]            : (mysql -e \"grant all privileges on DBNAME . * to USER_NAME; flush privileges;\")
+ $1 password    [user_name]<@host> [password]          : (mysql -e \"alter user USER_NAME identified by 'PASSWORD';\")
+ $1 dropuser    [user_name]<@host>                     : (mysql -e \"drop user USER_NAME;\")
+
+ $1 makereader  [user_name]<@host> [password] [dbname] : create user + grant select privileges on the DBNAME
+ $1 makeowner   [user_name]<@host> [password] [dbname] : create user + grant all    privileges on the DBNAME
+ $1 makezabbix                                         : create mysql zabbix user + write access to /etc/zabbix/.my.cnf
+ $1 makebareos                                         : create mysql bareos user + write access to /root/.bareos.cnf
+ $1 tuning                                             : running a script from the repository https://github.com/BMDan/tuning-primer.sh
 
  "; };
 
-# $1 createuser  [user]@host [password]           : create user
-# $1 grantall    [user]@host [dbname]             : grant all privileges to the user on the db 
 
 sql(){
   MESSAGE_CAPTCHA="WARNING!!! Enter \"DROP\" to drop database: ";
@@ -816,12 +817,13 @@ sql(){
       "variables") _sql_variables;;
       "drop")   [ -n "$2" ] && read -p "$MESSAGE_CAPTCHA" captcha && [ "$captcha" = "DROP" ] && mysql -e "DROP DATABASE $2;" && sql bases || echo "FALSE";;
       "dump")     [ -n "$2" ] && mysqldump "$2" > "$2.sql";;
-      "copy")     [ $# -ge 3 ] && mysql -e "CREATE DATABASE $3;"; mysqldump "$2" | mysql "$3";;
+      "copy")     [ $# -ge 3 ] && mysqldump "$2" | mysql "$3";;
       "users")  mysql -e "SELECT USER,Host FROM mysql.user;";;
       "makeowner")  [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT ALL PRIVILEGES ON $4 . * TO $2;FLUSH PRIVILEGES;";;
       "makereader") [ $# -ge 4 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';GRANT SELECT ON $4 . * TO $2;FLUSH PRIVILEGES;";;
-      #"createuser") [ $# -ge 3 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';";;
-      #"grantall") [ $# -ge 3 ] && mysql -e "GRANT ALL PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
+      "createuser") [ $# -ge 3 ] && mysql -e "CREATE USER $2 IDENTIFIED BY '$3';";;
+      "grantall") [ $# -ge 3 ] && mysql -e "GRANT ALL PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
+      "grantselect") [ $# -ge 3 ] && mysql -e "GRANT SELECT  PRIVILEGES ON $3 . * TO $2;FLUSH PRIVILEGES;";;
       "user")     [ -n "$2" ] && mysql -e "SHOW GRANTS FOR $2;";;
       "password") [ -n "$2" ] && mysql -e "ALTER USER $2 IDENTIFIED BY '$3';";;
       "dropuser") [ -n "$2" ] && mysql -e "DROP USER $2;";;
