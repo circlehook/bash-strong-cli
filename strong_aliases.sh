@@ -791,10 +791,10 @@ Usage:
  $1 password    [user_name]<@host> [password]          : (mysql -e \"alter user USER_NAME identified by 'PASSWORD';\")
  $1 dropuser    [user_name]<@host>                     : (mysql -e \"drop user USER_NAME;\")
 
- $1 makereader  [user_name]<@host> [password] [dbname] : create user + grant select privileges on the DBNAME
- $1 makeowner   [user_name]<@host> [password] [dbname] : create user + grant all    privileges on the DBNAME
- $1 makezabbix                                         : create mysql zabbix user + write access to /etc/zabbix/.my.cnf
- $1 makebareos                                         : create mysql bareos user + write access to /root/.bareos.cnf
+ $1 makereader  [user_name]<@host> [password] [dbname] : create USER_NAME user + grant select privileges on the DBNAME
+ $1 makeowner   [user_name]<@host> [password] [dbname] : create USER_NAME user + grant all    privileges on the DBNAME
+ $1 makezabbix                                         : create ZABBIX    user + write access to /etc/zabbix/.my.cnf
+ $1 makebareos                                         : create BAREOS    user + write access to /root/.bareos.cnf
  $1 tuning                                             : running a script from the repository https://github.com/BMDan/tuning-primer.sh
 
  "; };
